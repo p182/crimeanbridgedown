@@ -1,0 +1,224 @@
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Падение крымского моста</title>
+  <meta name="description" content="Падение крымского моста">
+  <meta property="og:site_name" content="Крымский мост">
+  <meta property="og:url" content="http://crimeanbridgedown.com.ua/">
+  <meta property="og:description" content="Готовьтесь, время покинуть Украинский Крым у вас еще есть!">
+  <meta property="og:image" content="bridge.jpg">
+  <style type="text/css">
+    @font-face {
+      font-family: 'PressStart2P-Regular';
+      src: url('lcd.ttf');
+    }
+
+    @font-face {
+      font-family: 'Impact';
+      src: url('Impact.ttf');
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      :root {
+        scroll-behavior: smooth;
+      }
+    }
+
+    /* Style the video: 100% width and height to cover the entire window */
+    #myVideo {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+    }
+
+    #myVideoMob {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      visibility: hidden;
+    }
+
+    /* Add some content at the bottom of the video/page */
+    .content {
+      position: fixed;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      padding: 20px;
+      letter-spacing: 2px;
+      font-family: Impact;
+      text-align: center;
+      font-size: 1.5em;
+      color: #b21b1b
+    }
+
+    .content1 {
+      position: fixed;
+      top: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      padding: 20px;
+      letter-spacing: 5px;
+      font-family: Impact;
+      text-align: center;
+      font-size: 3.5em;
+      color: #b21b1b
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      -webkit-text-size-adjust: 100%;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      display: flex;
+      justify-content: center;
+    }
+
+    .timer__items {
+      display: flex;
+      font-size: 6em;
+    }
+
+    .timer__item {
+      position: relative;
+      min-width: 60px;
+      margin-left: 10px;
+      margin-right: 10px;
+      padding-bottom: 15px;
+      text-align: center;
+    }
+
+    .timer__item::before {
+      content: attr(data-title);
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      font-size: 14px;
+    }
+
+    .timer__item:not(:last-child)::after {
+      content: ':';
+      position: absolute;
+      right: -15px;
+    }
+
+    .Absolute-Center {
+      margin: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+      .timer__items {
+        font-size: 4em;
+      }
+
+      #myVideo {
+        visibility: hidden;
+      }
+
+      #myVideoMob {
+        visibility: visible;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // конечная дата
+      const deadline = new Date("2022-05-09T10:00:00");
+      // id таймера
+      let timerId = null;
+      // склонение числительных
+      function declensionNum(num, words) {
+        return words[(num % 100 > 4 && num % 100 < 20) ? 2 : [2, 0, 1, 1, 1, 2][(num % 10 < 5) ? num % 10 : 5]];
+      }
+      // вычисляем разницу дат и устанавливаем оставшееся времени в качестве содержимого элементов
+      function countdownTimer() {
+        const diff = deadline - new Date();
+        if (diff <= 0) {
+          clearInterval(timerId);
+        }
+        const days = diff > 0 ? Math.floor(diff / 1000 / 60 / 60 / 24) : 0;
+        const hours = diff > 0 ? Math.floor(diff / 1000 / 60 / 60) % 24 : 0;
+        const minutes = diff > 0 ? Math.floor(diff / 1000 / 60) % 60 : 0;
+        const seconds = diff > 0 ? Math.floor(diff / 1000) % 60 : 0;
+        $days.textContent = days < 10 ? '0' + days : days;
+        $hours.textContent = hours < 10 ? '0' + hours : hours;
+        $minutes.textContent = minutes < 10 ? '0' + minutes : minutes;
+        $seconds.textContent = seconds < 10 ? '0' + seconds : seconds;
+        $days.dataset.title = declensionNum(days, ['день', 'дня', 'дней']);
+        $hours.dataset.title = declensionNum(hours, ['час', 'часа', 'часов']);
+        $minutes.dataset.title = declensionNum(minutes, ['минута', 'минуты', 'минут']);
+        $seconds.dataset.title = declensionNum(seconds, ['секунда', 'секунды', 'секунд']);
+      }
+      // получаем элементы, содержащие компоненты даты
+      const $days = document.querySelector('.timer__days');
+      const $hours = document.querySelector('.timer__hours');
+      const $minutes = document.querySelector('.timer__minutes');
+      const $seconds = document.querySelector('.timer__seconds');
+      // вызываем функцию countdownTimer
+      countdownTimer();
+      // вызываем функцию countdownTimer каждую секунду
+      timerId = setInterval(countdownTimer, 1000);
+    });
+  </script>
+
+</head>
+
+<body>
+  <!-- The video -->
+  <video autoplay muted loop id="myVideo">
+    <source src="video.mp4" type="video/mp4">
+  </video>
+
+  <video autoplay muted loop playsinline  id="myVideoMob">
+    <source src="video768.webm" type="video/webm">
+    <source src="video768.mp4" type="video/mp4">
+    <source src="video768.ogv" type="video/ogv">
+  </video>
+
+
+
+
+  <!-- Optional: some overlay text to describe the video -->
+  <div class="content1" style="">КРЫМСКИЙ МОСТ ПАДЁТ:</div>
+  <div class="timer" style="color:#b21b1b;margin: auto;">
+    <div class="timer__items" style="font-family: PressStart2P-Regular; margin: 0 auto;background: rgba(0, 0, 0, 0.7); position: relative;">
+      <div class="timer__item timer__days">00</div>
+      <div class="timer__item timer__hours">00</div>
+      <div class="timer__item timer__minutes">00</div>
+      <div class="timer__item timer__seconds">00</div>
+    </div>
+  </div>
+
+  <!-- Optional: some overlay text to describe the video -->
+  <div class="content">Россияне, переехавшие в Крым после его окупации в 2014 году, у вас еще есть время покинуть территорию суверенного государства Украина!</div>
+</body>
+
+</html>
